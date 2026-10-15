@@ -2,7 +2,7 @@ name: 夸克网盘每日签到
 on:
   schedule:
     - cron: "10 16 * * *" # 北京时间 00:10 主任务
-    - cron: "10 18 * * *" # 北京时间 02:10 兜底
+    - cron: "10 18 * * *" # 北京时间 02:10 兜底重试
   workflow_dispatch:
 permissions:
   contents: read
@@ -55,7 +55,7 @@ jobs:
         if: steps.cache-success.outputs.cache-hit != 'true'
         env:
           COOKIE_QUARK: ${{ secrets.COOKIE_QUARK }}
-        run: python "夸克每日签到.py"
+        run: python checkIn_Quark.py
       - name: 生成今日成功标记
         if: success() && steps.cache-success.outputs.cache-hit != 'true'
         run: |
@@ -67,4 +67,3 @@ jobs:
         with:
           path: .cache/quark-signin
           key: quark-signed-${{ steps.date.outputs.today }}
-
